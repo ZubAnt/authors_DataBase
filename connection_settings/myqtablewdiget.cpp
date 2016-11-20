@@ -27,5 +27,3 @@ void myQTableWidget::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEdit
     QModelIndexList index_list = this->selectionModel()->selectedIndexes();
     emit signal_update_all_data_conenctions(index_list[0]);
 }
-
-

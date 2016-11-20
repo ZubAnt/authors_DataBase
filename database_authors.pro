@@ -43,4 +43,4 @@ FORMS    += mainwindow.ui \
     ./connection_settings/connection_settings.ui
 
 RESOURCES += \
-    wtf.qrc
+    image/image.qrc

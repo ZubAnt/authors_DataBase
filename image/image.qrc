@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/connect">
+        <file>connect.png</file>
+        <file>connect2.png</file>
+        <file>connect3.png</file>
+    </qresource>
+    <qresource prefix="/report_button">
+        <file>cross.png</file>
+        <file>down.png</file>
+        <file>up.png</file>
+    </qresource>
+</RCC>

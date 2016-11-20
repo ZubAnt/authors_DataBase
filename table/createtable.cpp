@@ -1,7 +1,10 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDebug>
+
 void MainWindow::creeate_pb_house_table(){
+
     QSqlQuery query(db);
 
     query.prepare( "CREATE TABLE IF NOT EXISTS Publishing_house("
@@ -10,16 +13,17 @@ void MainWindow::creeate_pb_house_table(){
                    "UNIQUE KEY (Name))" );
 
     if(query.exec()){
-        ui->textEdit->append("Table Publishing_house was created");
+
+        qDebug() << "Table Publishing_house was created";
     }
     else{
         error_create_table(query);
-        print_err("creeate_pb_house_table", __FILE__, __LINE__, TABLE_NOT_CREATED);
         throw -1;
     }
 }
 
 void MainWindow::creeate_type_of_pb_table(){
+
     QSqlQuery query(db);
 
     query.prepare( "CREATE TABLE IF NOT EXISTS Type_of_publication("
@@ -27,16 +31,17 @@ void MainWindow::creeate_type_of_pb_table(){
                    "Name varchar(255) NOT NULL,"
                    "UNIQUE KEY (Name))" );
     if(query.exec()){
-        ui->textEdit->append("Table Type_of_publication was created");
+
+        qDebug() << "Table Type_of_publication was created";
     }
     else{
         error_create_table(query);
-        print_err("creeate_type_of_pb_table", __FILE__, __LINE__, TABLE_NOT_CREATED);
         throw -1;
     }
 }
 
 void MainWindow::create_main_table(){
+
     QSqlQuery query(db);
 
     query.prepare("CREATE TABLE IF NOT EXISTS `main` ("
@@ -64,11 +69,12 @@ void MainWindow::create_main_table(){
                   " REFERENCES `publishing_house` (`pb_house_id`)"
                   ")");
     if(query.exec()){
-        ui->textEdit->append("Table main was created");
+
+        qDebug() << "Table main was created";
     }
     else{
+
         error_create_table(query);
-        print_err("creeate_type_of_pb_table", __FILE__, __LINE__, TABLE_NOT_CREATED);
         throw -1;
     }
 }

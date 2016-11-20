@@ -91,4 +91,3 @@ static void first_symb_upper(QString &to_upper_strig){
         }
     }
 }
-

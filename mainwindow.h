@@ -67,7 +67,6 @@ private slots:
     void on_Connect_DB_clicked();
 
     bool check_shure_download_db();
-    void on_download_pbh_clicked();
 
     void on_remove_row_clicked();
     void on_append_row_clicked();

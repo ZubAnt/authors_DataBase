@@ -79,4 +79,3 @@ void MainWindow::freeze_column_main_table(){
     ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_pl,    QHeaderView::Fixed);
     ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_authors_pl, QHeaderView::Fixed);
 }
-

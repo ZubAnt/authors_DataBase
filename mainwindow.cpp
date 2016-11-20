@@ -50,13 +50,18 @@ MainWindow::~MainWindow()
 }
 
 bool MainWindow::check_shure_download_db(){
-  QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(this, "Download to a publishing houses", "Are you shure?",
-                                QMessageBox::Yes|QMessageBox::No);
-  if (reply == QMessageBox::Yes) {
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this,
+                                  "Download to a publishing houses", "Are you shure?",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes){
+
         return true;
-  }
-  return false;
+    }
+
+    return false;
 }
 
 
@@ -80,8 +85,6 @@ void MainWindow::open_database(const QString &name)
             exit(1);
         }
 
-        qDebug()<<"open_database";
-
         if(db.open()){
 
             QSqlQuery Query(db);
@@ -89,18 +92,18 @@ void MainWindow::open_database(const QString &name)
             QString create_name_db = "CREATE DATABASE IF NOT EXISTS " + name;
             if (Query.exec(create_name_db.toStdString().c_str())){
 
-                ui->textEdit->append("CREATE DATABASE is successful");                
+                qDebug() << "CREATE DATABASE IF NOT EXISTS is successful";
             }
             else{
 
-                ui->textEdit->append("Error CREATE DATABASE");
+                ui->statusBar->showMessage("Error CREATE DATABASE");
                 clear_tables();
                 db.close();
             }
         }
         else{
 
-            ui->textEdit->append(db.lastError().text());
+            ui->statusBar->showMessage(db.lastError().text());
             QMessageBox::critical(this, "Установка соединения с базой",
                                   "Некорректные параметры соединения.\n"
                                   "Проверьте настройки.");
@@ -110,6 +113,7 @@ void MainWindow::open_database(const QString &name)
 
         db.setDatabaseName(name);
         db.open();
+
         //Создание таблиц
         try{
             creeate_pb_house_table();
@@ -118,7 +122,7 @@ void MainWindow::open_database(const QString &name)
         }
 
         catch(int err){
-            ui->textEdit->append("interception exception");
+            ui->statusBar->showMessage("interception exception");
             return;
         }
 
@@ -129,9 +133,7 @@ void MainWindow::open_database(const QString &name)
         init_pb_house_tableView();
         init_main_tableView();
 
-        ui->textEdit->append("The database connection is successfully established, Enjoy ;)");
-
-        print_err("on_Connect_DB_clicked", __FILE__, __LINE__, ITS_OK);
+        ui->statusBar->showMessage("Соединение с базой данных успешно установлено");
     }
     else{
 
@@ -146,63 +148,6 @@ void MainWindow::clear_tables()
     main_table->clear();
 }
 //функция, которая загружает базу данных из файла
-void MainWindow::on_download_pbh_clicked()
-{
-
-    db_test = QSqlDatabase::addDatabase("QMYSQL");
-
-    db_test.setPort(3306);
-    db_test.setHostName("127.0.0.1");
-    db_test.setUserName("root");
-    db_test.setPassword("admin");
-
-//    QSqlQuery query(db_test);
-
-    if(db_test.open()) {
-      QSqlQuery Query(db_test);
-      if (Query.exec("CREATE DATABASE IF NOT EXISTS newdatabase_test"))
-        qDebug() << "Ok"; else qDebug() << "Error query";
-    } else qDebug() << "Error open";
-
-//    query.prepare( "CREATE DATABASE IF NOT EXISTS testDb");
-
-//    if(query.exec()){
-//       qDebug()<<"It's OK";
-//    }
-//    else{
-//       qDebug()<<"ERROR";
-//       qDebug()<<"MySQL error:" + query.lastError().text();
-//       qDebug()<<"MySQL error code:"+ QString::number(query.lastError().number());
-//    }
-
-
-
-//    sr = query.exec("CREATE DATABASE IF NOT EXISTS "+dbname);
-//    QString fileName_pbh = QFileDialog::getOpenFileName(this, tr("Open File"), "",
-//            "Text Files (*.txt);;all files (*.*)");
-
-//    QFileInfo fileName_pbh_info(fileName_pbh);
-
-//    ui->textEdit->append(fileName_pbh_info.fileName() + " has been selected");
-
-//    QFile pbh_file(fileName_pbh);
-//    if(!pbh_file.open(QIODevice::ReadOnly | QIODevice::Text)){
-//        ui->textEdit->append(fileName_pbh_info.fileName() + " is not opened");
-//        return;
-//    }
-//    else{
-//         ui->textEdit->append(fileName_pbh_info.fileName() + " open");
-//    }
-//    if(check_shure_download_db()){
-//        ui->textEdit->append("ЗДЕСЬ БУДЕТ ЗАГРУЗКА В БАЗУ ДАННЫХ СЧИТАННЫХ СТРОКИ");
-////        Download_PB::download_table(pbh_file);
-
-//    }
-//    else{
-//        ui->textEdit->append("В другой раз ;)");
-//        return;
-//    }
-}
 
 QTableView *MainWindow::get_tableView(int current_tab){
     switch(current_tab){
@@ -240,6 +185,7 @@ void MainWindow::slot_fullscreen_enable_slot()
 void MainWindow::slot_fullscreen_disable_slot()
 {
     if(this->isFullScreen()){
+
         this->setWindowState(Qt::WindowMaximized);
     }
 }
@@ -250,7 +196,6 @@ void MainWindow::slot_set_conections_settings_database(const QString &name,
                                                        const QString &password,
                                                        const int port)
 {
-//    db.setDatabaseName(name);
     db.setHostName(host);
     db.setUserName(login);
     db.setPassword(password);
@@ -260,30 +205,35 @@ void MainWindow::slot_set_conections_settings_database(const QString &name,
 }
 
 void MainWindow::slot_get_numb_tab(int &numb_tab){
+
     numb_tab = ui->tabWidget->currentIndex();
 }
 
 void MainWindow::slot_remove_rows(QTableView *tableView_change, const int numb_tab, const QModelIndexList &index_rem_rows){
 
     if(!db.isOpen()){
-        ui->textEdit->append("Please connect to the database");
-        print_err("on_remove_row_clicked", __FILE__, __LINE__, DB_NOT_OPEN);
+
+        ui->statusBar->showMessage("Please connect to the database");
         return;
     }
 
     QSqlTableModel *table_change = get_table(numb_tab);
 
     if(!tableView_change || !table_change){
+
         print_err("on_remove_row_clicked", __FILE__, __LINE__, NULL_POINTER);
         return;
     }
 
     if(index_rem_rows.empty()){
-        ui->textEdit->append("Выберете строку для удаления");
+
+        ui->statusBar->showMessage("Выберете строку для удаления");
         return;
     }
+
     int len  = index_rem_rows.length();
     for(int i =0; i < len; ++i){
+
         table_change->removeRow(index_rem_rows[i].row());
     }
 
@@ -294,8 +244,8 @@ void MainWindow::slot_remove_rows(QTableView *tableView_change, const int numb_t
 void MainWindow::on_remove_row_clicked()
 {
     if(!db.isOpen()){
-        ui->textEdit->append("Please connect to the database");
-        print_err("on_remove_row_clicked", __FILE__, __LINE__, DB_NOT_OPEN);
+
+        ui->statusBar->showMessage("Please connect to the database");
         return;
     }
 
@@ -310,8 +260,8 @@ void MainWindow::on_remove_row_clicked()
 void MainWindow::on_append_row_clicked()
 {
     if(!db.isOpen()){
-        ui->textEdit->append("Please connect to the database");
-        print_err("on_append_row_clicked", __FILE__, __LINE__, DB_NOT_OPEN);
+
+        ui->statusBar->showMessage("Please connect to the database");
         return;
     }
 
@@ -330,8 +280,8 @@ void MainWindow::on_append_row_clicked()
 void MainWindow::on_insert_row_clicked()
 {
     if(!db.isOpen()){
-        ui->textEdit->append("Please connect to the database");
-        print_err("on_insert_row_clicked", __FILE__, __LINE__, DB_NOT_OPEN);
+
+        ui->statusBar->showMessage("Please connect to the database");
         return;
     }
 
@@ -341,6 +291,7 @@ void MainWindow::on_insert_row_clicked()
     QSqlTableModel *table_change = get_table(numb_tab);
 
     if(!table_change || !table_change){
+
         print_err("on_insert_row_clicked", __FILE__, __LINE__, NULL_POINTER);
         return;
     }
@@ -348,7 +299,8 @@ void MainWindow::on_insert_row_clicked()
     QModelIndexList ins_rows = tableView_change->selectionModel()->selectedIndexes();
 
     if(ins_rows.empty()){
-        ui->textEdit->append("Выберете строку, перед которой необходимо вставить");
+
+        ui->statusBar->showMessage("Выберете строку, перед которой необходимо вставить");
         return;
     }
 
@@ -357,12 +309,14 @@ void MainWindow::on_insert_row_clicked()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    switch (event->key()) {
+    switch (event->key()){
     case Qt::Key_Escape:
+
         slot_fullscreen_disable_slot();
         break;
 
     case Qt::Key_F5:
+
         slot_fullscreen_enable_slot();
         break;
 
@@ -373,7 +327,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    qDebug()<<"closeEvent";
     emit signal_close_connectoins_setttings_window();
     event->accept();
 }
