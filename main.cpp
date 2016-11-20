@@ -3,7 +3,6 @@
 #include <QTableWidget>
 #include <QStringList>
 
-#include "itemdelegate.h"
 
 int main(int argc, char *argv[])
 {

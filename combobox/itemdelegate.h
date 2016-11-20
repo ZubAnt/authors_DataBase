@@ -6,7 +6,7 @@
 #include <QComboBox>
 #include <QString>
 
-#include "./table/indexcolumndb.h"
+#include "../table/indexcolumndb.h"
 
 class ComboBoxItemDelegate : public QStyledItemDelegate
 {

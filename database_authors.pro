@@ -16,7 +16,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     download_publish_house_from_file.cpp \
-    itemdelegate.cpp \
     ./table/myqsqltablemodel.cpp \
     ./table/myqtableview.cpp \
     ./table/indexcolumndb.cpp \
@@ -27,17 +26,18 @@ SOURCES += main.cpp\
     ./connection_settings/connection_settings.cpp \
     connection_settings/myqtablewdiget.cpp \
     connection_settings/connections_data_changed.cpp \
-    connection_settings/export_import.cpp
+    connection_settings/export_import.cpp \
+    ./combobox/itemdelegate.cpp
 
 HEADERS  += mainwindow.h \
     download_publish_house_from_file.h \
     errors_authors_db.h \
-    itemdelegate.h \
     ./table/myqsqltablemodel.h \
     ./table/myqtableview.h \
     ./table/indexcolumndb.h \
     ./connection_settings/connection_settings.h \
-    connection_settings/myqtablewidget.h
+    connection_settings/myqtablewidget.h \
+    ./combobox/itemdelegate.h
 
 FORMS    += mainwindow.ui \
     ./connection_settings/connection_settings.ui

@@ -12,7 +12,7 @@
 
 #include "mainwindow.h"
 #include "errors_authors_db.h"
-#include "itemdelegate.h"
+#include "./combobox/itemdelegate.h"
 #include "./table/myqsqltablemodel.h"
 #include "./table/indexcolumndb.h"
 #include "./connection_settings/connection_settings.h"

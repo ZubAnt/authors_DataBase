@@ -16,7 +16,7 @@
 
 #include "errors_authors_db.h"
 #include "download_publish_house_from_file.h"
-#include "itemdelegate.h"
+#include "./combobox/itemdelegate.h"
 #include "./table/myqtableview.h"
 #include "./table/myqsqltablemodel.h"
 

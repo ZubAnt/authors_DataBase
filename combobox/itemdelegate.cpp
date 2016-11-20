@@ -7,7 +7,7 @@
 #include <QTableView>
 
 #include "itemdelegate.h"
-#include "./table/indexcolumndb.h"
+#include "../table/indexcolumndb.h"
 
 /*
  * данный класс создает комбобокс-ы для различных столбцов

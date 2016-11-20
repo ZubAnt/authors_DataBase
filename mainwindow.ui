@@ -253,7 +253,7 @@ selection-background-color: rgb(158, 158, 158);
 background-color: rgb(255, 255, 255);</string>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <property name="documentMode">
            <bool>false</bool>
