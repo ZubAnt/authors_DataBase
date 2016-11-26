@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlTableModel>
+#include <QColor>
 
 #include "myqsqltablemodel.h"
 
@@ -17,9 +18,12 @@ MyQSqlTableModel::MyQSqlTableModel(QObject* parent,
     this->pb_house = pb_house;
 
     columnDb = new indexColumnDb();
+    added_to_report_rows_set = new QSet<int>();
 }
 MyQSqlTableModel::~MyQSqlTableModel(){
+
     delete columnDb;
+    delete added_to_report_rows_set;
 }
 
 QVariant MyQSqlTableModel::data(const QModelIndex &index, int role) const
@@ -43,7 +47,15 @@ QVariant MyQSqlTableModel::data(const QModelIndex &index, int role) const
             return pb_house->record(count_id).value(1).toString();
         }
 
+
+
         return QSqlTableModel::data(index).toString();
+    }
+
+    if (role == Qt::BackgroundRole) {
+        int row = index.row();
+        QColor color = calculateColorForRow(row);
+        return QBrush(color);
     }
 
     return QSqlTableModel::data(index, role);
@@ -77,17 +89,38 @@ int MyQSqlTableModel:: get_count_id_pb_house(const int id) const{
     return count_id;
 }
 
-static void first_symb_upper(QString &to_upper_strig){
+QColor MyQSqlTableModel::calculateColorForRow(const int row) const
+{
+    if(added_to_report_rows_set->isEmpty()){
 
-    int up_pos = 0;
-    int len = to_upper_strig.length();
-    for(int i = 0; i < len; ++i){
-        if(to_upper_strig[i] == '\n' || i == len - 1){
-            QChar c = to_upper_strig[up_pos];
-            if(c >= 'a' || c <= 'z'){
-                to_upper_strig.replace(up_pos, 1, c.toUpper());
-            }
-            up_pos = i+1;
-        }
+        return Qt::white;
     }
+
+    auto it = added_to_report_rows_set->find(row);
+    if(it != added_to_report_rows_set->constEnd()){
+
+        return QColor("lightgreen");
+    }
+
+    return Qt::white;
+}
+
+void MyQSqlTableModel::add_to_set_of_added_rows(const int row)
+{
+    added_to_report_rows_set->insert(row);
+}
+
+bool MyQSqlTableModel::check_presence(const int row)
+{
+    if(added_to_report_rows_set->isEmpty()){
+        return false;
+    }
+
+    auto it = added_to_report_rows_set->find(row);
+    if(it != added_to_report_rows_set->end()){
+        qDebug() << "it != added_to_report_rows_set->end()";
+        return true;
+    }
+
+    return false;
 }

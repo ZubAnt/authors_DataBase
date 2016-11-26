@@ -10,6 +10,11 @@ myQTableView::myQTableView(QWidget *parent) :
 {
     columnDb = new indexColumnDb();
 }
+
+void myQTableView::tmp_close(QWidget *editor)
+{
+    QTableView::closeEditor(editor, QAbstractItemDelegate::SubmitModelCache);
+}
 myQTableView::~myQTableView(){
     delete columnDb;
 }

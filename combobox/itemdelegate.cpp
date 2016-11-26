@@ -219,8 +219,9 @@ int ComboBoxItemDelegate::get_count_id_type_of_pb_table(const QString &id_value)
 
     int find_id = 0;
     bool find_check = false;
+    int row_count =  type_of_pb->rowCount();
 
-    for(int i = 0; i < type_of_pb->rowCount(); ++i){
+    for(int i = 0; i < row_count; ++i){
         if(type_of_pb->record(i).value(1).toString() == id_value){
             find_id = type_of_pb->record(i).value(0).toInt();
             find_check = true;
@@ -240,8 +241,9 @@ int ComboBoxItemDelegate::get_count_id_pb_house_table(const QString &id_value) c
 
     int find_id = 0;
     bool find_check = false;
+    int row_count =  pb_house->rowCount();
 
-    for(int i = 0; i < pb_house->rowCount(); ++i){
+    for(int i = 0; i < row_count; ++i){
         if(pb_house->record(i).value(1).toString() == id_value){
             find_id = pb_house->record(i).value(0).toInt();
             find_check = true;

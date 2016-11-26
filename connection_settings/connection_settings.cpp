@@ -268,6 +268,7 @@ void connection_settings::slot_update_all_data_conenctions(const QModelIndex &in
     qDebug()<<"update: "<<QString::number(index_update.row());
     int row =index_update.row();
     if(DB_was_created->value(row) == false){
+
         QString old_name = DB_name->value(row);
         QString new_name = ui->tableWidget_nameDB->model()->data(index_update).toString();
 
@@ -286,6 +287,7 @@ void connection_settings::slot_update_all_data_conenctions(const QModelIndex &in
         map_comment->insert(old_name, ui->textEdit_comment->toPlainText());
     }
     else{
+
         ui->tableWidget_nameDB->setItem(row, 0, new QTableWidgetItem(DB_name->value(row)));
     }
 }

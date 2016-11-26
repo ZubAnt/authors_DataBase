@@ -7,6 +7,7 @@
 #include <QModelIndex>
 #include <QString>
 #include <QSqlDatabase>
+#include <QSet>
 
 #include "myqtableview.h"
 #include "indexcolumndb.h"
@@ -29,6 +30,7 @@
 class MyQSqlTableModel : public QSqlTableModel
 {
     Q_OBJECT
+
 public:
 
     MyQSqlTableModel(QObject* parent,
@@ -42,6 +44,10 @@ public:
 
     int get_count_id_type_of_pb_table(const int id) const;
     int get_count_id_pb_house(const int id) const;  
+    QColor calculateColorForRow(const int row) const;
+    void add_to_set_of_added_rows(const int row);
+    bool check_presence(const int row); //проверка на присутствие
+                                        //в множестве added_to_report_rows_set строки
 
 public slots:
 private:
@@ -51,6 +57,9 @@ private:
     QSqlTableModel *type_of_pb; //указатель на таблицу Вид публикации (type_of_publication)
     QSqlTableModel *pb_house;   //указатель на таблицу Издательство   (publishing_house)
     QSqlDatabase *db;           //указатель на базу данных
+
+    QSet<int> *added_to_report_rows_set;    //Указатель на set хранящий индексы строк,
+                                            //добавленные в отчет
 };
 
 #endif // MY_QSQLTABLEMODEL_H

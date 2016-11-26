@@ -13,6 +13,7 @@ class myQTableView : public QTableView
 
 public:
     explicit myQTableView(QWidget *parent = 0);
+    void tmp_close(QWidget *editor);
     ~myQTableView();
 
 protected:

@@ -1,6 +1,8 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDebug>
+
 void MainWindow::init_type_of_pb_tableView(){
 
     type_of_pb_table = new QSqlTableModel(this);
@@ -57,14 +59,14 @@ void MainWindow::setwidth_column_main_table(){
     //set width column
     ui->main_tableView->setColumnWidth(columnDb->index_name_of_pb, 255);  //Название публикации
     ui->main_tableView->setColumnWidth(columnDb->index_type_of_pb, 180);  //Вид публикации
-    ui->main_tableView->setColumnWidth(columnDb->index_type_paper, 52);   //тип, рук. печ.
+    ui->main_tableView->setColumnWidth(columnDb->index_type_paper, 52 );  //тип, рук. печ.
     ui->main_tableView->setColumnWidth(columnDb->index_publish_hs, 220);  //Издательство
-    ui->main_tableView->setColumnWidth(columnDb->index_year_pb, 92);      //год издания
-    ui->main_tableView->setColumnWidth(columnDb->index_numberpage, 80);   //Страницы
-    ui->main_tableView->setColumnWidth(columnDb->index_pl, 60);           //пл.
-    ui->main_tableView->setColumnWidth(columnDb->index_authors_pl, 60);   //авторских пл.
+    ui->main_tableView->setColumnWidth(columnDb->index_year_pb,    92 );  //год издания
+    ui->main_tableView->setColumnWidth(columnDb->index_numberpage, 80 );  //Страницы
+    ui->main_tableView->setColumnWidth(columnDb->index_pl,         60 );  //пл.
+    ui->main_tableView->setColumnWidth(columnDb->index_authors_pl, 60 );  //авторских пл.
     ui->main_tableView->setColumnWidth(columnDb->index_co_authors, 128);  //Соавторы
-    ui->main_tableView->setColumnWidth(columnDb->index_secur_clas, 45);   //гриф
+    ui->main_tableView->setColumnWidth(columnDb->index_secur_clas, 45 );  //гриф
     ui->main_tableView->setColumnWidth(columnDb->index_annotation, 200);  //примечание
 }
 
@@ -76,6 +78,20 @@ void MainWindow::freeze_column_main_table(){
     ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_type_paper, QHeaderView::Fixed);
     ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_year_pb,    QHeaderView::Fixed);
     ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_secur_clas, QHeaderView::Fixed);
-    ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_pl,    QHeaderView::Fixed);
+    ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_pl,         QHeaderView::Fixed);
     ui->main_tableView->horizontalHeader()->setSectionResizeMode (columnDb->index_authors_pl, QHeaderView::Fixed);
+}
+
+void MainWindow::init_report_tableWidget()
+{
+    ui->report_tableWidget->setColumnCount(rep_ind_max);
+
+    ui->report_tableWidget->setColumnHidden(rep_ind_type_paper, true);
+    ui->report_tableWidget->setColumnHidden(rep_ind_publish_hs, true);
+    ui->report_tableWidget->setColumnHidden(rep_ind_volome_pl ,  true);
+    ui->report_tableWidget->setColumnHidden(rep_ind_co_authors,  true);
+
+    ui->report_tableWidget->horizontalHeader()->setStretchLastSection(true);
+    ui->report_tableWidget->setHorizontalHeaderItem(rep_ind_name, new QTableWidgetItem("Название статьи"));
+    ui->report_tableWidget->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
 }

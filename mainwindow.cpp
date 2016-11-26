@@ -13,6 +13,7 @@
 #include <QModelIndex>
 #include <QCloseEvent>
 #include <QPalette>
+#include <QTextStream>
 
 #include "errors_authors_db.h"
 #include "download_publish_house_from_file.h"
@@ -24,28 +25,42 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     connect_window(new connection_settings),
+    progressbar_write_report(new progress_write),
+    db(QSqlDatabase::addDatabase("QMYSQL")),
+    columnDb(new indexColumnDb()),
     pb_house_table_name("publishing_house"),
     type_of_pb_table_name("type_of_publication"),
-    main_table_name("main")
+    main_table_name("main"),
+    add_to_report_err_str("Добавьте публикацию в отчет"),
+    choose_str_befor_inserting_err_str("Выберите строку, перед которой необходимо вставить"),
+    choose_str_for_adding_to_report_err_str("Выберите строку для добавления в отчет"),
+    choose_str_for_remove_from_report_err_str("Выберите строку для удаления из отчета"),
+    rep_ind_max(5),
+    rep_ind_name(0),
+    rep_ind_type_paper(1),
+    rep_ind_publish_hs(2),
+    rep_ind_volome_pl(3),
+    rep_ind_co_authors(4)
 {    
     qDebug()<<"Constructor MainWindow";
-    columnDb = new indexColumnDb();
-
-    db = QSqlDatabase::addDatabase("QMYSQL");
 
     ui->setupUi(this);
+
     init_connect();
+
+    init_report_tableWidget();
 }
 
 MainWindow::~MainWindow()
 {
     qDebug()<<"Distructor ~MainWindow";
+    delete connect_window;
     delete pb_house_table;
     delete type_of_pb_table;
     delete main_table;
     delete cmb_type_of_pb_table;
     delete columnDb;
-    delete connect_window;
+    delete progressbar_write_report;
     delete ui;
 }
 
@@ -64,12 +79,12 @@ bool MainWindow::check_shure_download_db(){
     return false;
 }
 
-
 void MainWindow::on_Connect_DB_clicked()
 {
     if(db.isOpen()){
 
         db.close();
+        clear_tables();
     }
 
     connect_window->setWindowTitle("Connection settings");
@@ -97,7 +112,6 @@ void MainWindow::open_database(const QString &name)
             else{
 
                 ui->statusBar->showMessage("Error CREATE DATABASE");
-                clear_tables();
                 db.close();
             }
         }
@@ -107,7 +121,6 @@ void MainWindow::open_database(const QString &name)
             QMessageBox::critical(this, "Установка соединения с базой",
                                   "Некорректные параметры соединения.\n"
                                   "Проверьте настройки.");
-            clear_tables();
             return;
         }
 
@@ -300,11 +313,101 @@ void MainWindow::on_insert_row_clicked()
 
     if(ins_rows.empty()){
 
-        ui->statusBar->showMessage("Выберете строку, перед которой необходимо вставить");
+        ui->statusBar->showMessage(choose_str_befor_inserting_err_str);
         return;
     }
 
     table_change->insertRow(ins_rows[0].row());
+}
+
+
+void MainWindow::on_add_to_report_clicked()
+{
+    if(!db.isOpen()){
+
+        ui->statusBar->showMessage("Please connect to the database");
+        return;
+    }
+
+    int numb_tab = ui->tabWidget->currentIndex();
+
+    if(numb_tab != 2){
+
+        ui->statusBar->showMessage("Please select the main tab");
+        return;
+    }
+
+    ui->statusBar->showMessage("Ok");
+
+    QModelIndexList add_to_rep_rows = ui->main_tableView->selectionModel()->selectedIndexes();
+
+    if(add_to_rep_rows.empty()){
+
+        ui->statusBar->showMessage(choose_str_for_adding_to_report_err_str);
+        return;
+    }
+
+    int selected_lenght = add_to_rep_rows.length();
+    int percent_cnt = 0;
+
+    for(auto it = add_to_rep_rows.cbegin();
+        it != add_to_rep_rows.cend();
+        ++it)
+    {
+        if(main_table->check_presence(it->row())){
+
+            qDebug() << "check_presence is true";
+            ++percent_cnt;
+            continue;
+        }
+        else{
+
+            int row_count = ui->report_tableWidget->rowCount();
+            ui->report_tableWidget->insertRow(row_count);
+
+//            ui->report_tableWidget->itemAt(row_count, rep_ind_name)->setData(Qt::DisplayRole, main_table->record(it->row()).value(columnDb->index_name_of_pb));
+
+            ui->report_tableWidget->setItem(row_count, rep_ind_name,
+                                            new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_name_of_pb).toString()));
+            ui->report_tableWidget->setItem(row_count, rep_ind_type_paper,
+                                            new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_type_paper).toString()));
+            ui->report_tableWidget->setItem(row_count, rep_ind_publish_hs,
+                                            new QTableWidgetItem(find_pb_house_by_id(main_table->record(it->row()).value(columnDb->index_publish_hs).toInt())));
+            ui->report_tableWidget->setItem(row_count, rep_ind_volome_pl,
+                                            new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_pl).toString()));
+            ui->report_tableWidget->setItem(row_count, rep_ind_co_authors,
+                                            new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_co_authors).toString()));
+
+            main_table->add_to_set_of_added_rows(it->row());
+
+            ui->statusBar->showMessage(QString::number((percent_cnt / selected_lenght) * 100) + "adding");
+            ++percent_cnt;
+        }
+
+        ui->statusBar->showMessage("OK");
+    }
+}
+
+const QString MainWindow::find_pb_house_by_id(const int id)
+{
+    QString find_pb_house_str;
+    int row_count =  pb_house_table->rowCount();
+
+    for(int i = 0; i < row_count; ++i){
+
+        if(pb_house_table->record(i).value(0).toInt() == id){
+
+            return pb_house_table->record(i).value(1).toString();
+        }
+    }
+
+    return find_pb_house_str;
+}
+
+void MainWindow::on_open_report_clicked()
+{
+    progressbar_write_report->show();
+    progressbar_write_report->set_progressbar(50);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -329,4 +432,15 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     emit signal_close_connectoins_setttings_window();
     event->accept();
+}
+
+void MainWindow::on_del_row_in_report_clicked()
+{
+    QModelIndexList del_from_rep_rows = ui->report_tableWidget->selectionModel()->selectedIndexes();
+
+    if(del_from_rep_rows.empty()){
+
+        ui->statusBar->showMessage(choose_str_for_remove_from_report_err_str);
+        return;
+    }
 }

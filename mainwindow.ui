@@ -48,7 +48,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
 </string>
       </property>
       <property name="title">
-       <string/>
+       <string>Список статей для отчета</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
        <property name="leftMargin">
@@ -63,7 +63,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="3" column="0">
+       <item row="3" column="1">
         <layout class="QGridLayout" name="gridLayout_8">
          <item row="0" column="0">
           <widget class="QPushButton" name="Connect_DB">
@@ -101,8 +101,11 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
          </item>
         </layout>
        </item>
-       <item row="1" column="0">
+       <item row="1" column="1">
         <layout class="QGridLayout" name="gridLayout_7">
+         <item row="1" column="0">
+          <widget class="QTableWidget" name="report_tableWidget"/>
+         </item>
          <item row="1" column="1">
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <property name="spacing">
@@ -137,7 +140,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="up_row_in_report">
              <property name="minimumSize">
               <size>
                <width>36</width>
@@ -171,7 +174,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="down_row_in_report">
              <property name="minimumSize">
               <size>
                <width>36</width>
@@ -193,7 +196,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="del_row_in_report">
              <property name="minimumSize">
               <size>
                <width>36</width>
@@ -229,8 +232,33 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
            </item>
           </layout>
          </item>
-         <item row="1" column="0">
-          <widget class="QTableView" name="tableView"/>
+         <item row="5" column="0" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="open_report">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(89, 89, 70);
+font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+             </property>
+             <property name="text">
+              <string>Открыть</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="save_report">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(89, 89, 70);
+font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+             </property>
+             <property name="text">
+              <string>Сохранить</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -424,6 +452,24 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="text">
              <string>Удалить строки</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="add_to_report">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(89, 89, 70);
+font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Добавить в отчет</string>
             </property>
            </widget>
           </item>
