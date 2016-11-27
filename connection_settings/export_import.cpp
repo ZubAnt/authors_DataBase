@@ -21,14 +21,14 @@ void connection_settings::export_data()
 
         for(int i = 0; i < row; ++i){
 
-            QString Name_Db =  DB_name->value(i);
+            QString Name_Db =  DB_name.value(i);
             out_stream << "Name Db:\n" << Name_Db << endl;
-            out_stream << "WAS CREATED:\n   " << DB_was_created->value(i) << endl;
-            out_stream << "Host:\n" << map_host->value(Name_Db) << endl;
-            out_stream << "Login:\n" << map_login->value(Name_Db) << endl;
-            out_stream << "Password:\n" << map_password->value(Name_Db) << endl;
-            out_stream << "Port:\n" << map_port->value(Name_Db) << endl;
-            out_stream << "Comment:\n" << map_comment->value(Name_Db) << endl << endl;
+            out_stream << "WAS CREATED:\n   " << DB_was_created.value(i) << endl;
+            out_stream << "Host:\n" << map_host.value(Name_Db) << endl;
+            out_stream << "Login:\n" << map_login.value(Name_Db) << endl;
+            out_stream << "Password:\n" << map_password.value(Name_Db) << endl;
+            out_stream << "Port:\n" << map_port.value(Name_Db) << endl;
+            out_stream << "Comment:\n" << map_comment.value(Name_Db) << endl << endl;
             ui->progressBar->setValue(((i + 1) / row) * 100);
         }
     }
@@ -58,7 +58,7 @@ void connection_settings::import_data()
 
             inp_stream.readLine();                  // забирает строку
             input_string = inp_stream.readLine();   // Название БД
-            DB_name->insert(i, input_string);
+            DB_name.insert(i, input_string);
 
             //Отображение названия базы данных
             ui->tableWidget_nameDB->insertRow(i);
@@ -66,7 +66,7 @@ void connection_settings::import_data()
 
             inp_stream.readLine();                  // забирает строку
             input_string = inp_stream.readLine();   // was created
-            DB_was_created->insert(i, input_string.toInt());
+            DB_was_created.insert(i, input_string.toInt());
 
             inp_stream.readLine();                  // забирает строку
             input_string = inp_stream.readLine();   // Host

@@ -70,14 +70,24 @@ private:
     int index_data_connections_port;
     int index_data_connections_comment;
 
-    QMap<int, QString> *DB_name;
-    QMap<int, bool> *DB_was_created;
+//    QMap<int, QString> *DB_name;
+//    QMap<int, bool> *DB_was_created;
 
-    QMap<QString, QString> *map_host;
-    QMap<QString, QString> *map_login;
-    QMap<QString, QString> *map_password;
-    QMap<QString, int> *map_port;
-    QMap<QString, QString> *map_comment;
+//    QMap<QString, QString> *map_host;
+//    QMap<QString, QString> *map_login;
+//    QMap<QString, QString> *map_password;
+//    QMap<QString, int> *map_port;
+//    QMap<QString, QString> *map_comment;
+
+
+    QMap<int, QString> DB_name;
+    QMap<int, bool> DB_was_created;
+
+    QMap<QString, QString> map_host;
+    QMap<QString, QString> map_login;
+    QMap<QString, QString> map_password;
+    QMap<QString, int> map_port;
+    QMap<QString, QString> map_comment;
 
     QString selected_nameDB;
     QString try_open_name_DB;

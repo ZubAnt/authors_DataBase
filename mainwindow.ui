@@ -26,6 +26,220 @@ color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="3">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="1">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;
+color: rgb(0, 0, 0);
+selection-background-color: rgb(158, 158, 158);
+background-color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <property name="documentMode">
+           <bool>false</bool>
+          </property>
+          <widget class="QWidget" name="publish_house">
+           <attribute name="title">
+            <string>Издательство</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="myQTableView" name="pbh_tableView">
+              <property name="styleSheet">
+               <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_4">
+           <attribute name="title">
+            <string>Вид публикации</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="myQTableView" name="type_of_pb_tableView">
+                <property name="styleSheet">
+                 <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;
+</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>Главная</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_6">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="0">
+               <widget class="myQTableView" name="main_tableView">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 9pt &quot;MS Shell Dlg 2&quot;;
+border-left-color: rgb(0, 0, 0);
+gridline-color: rgb(0, 0, 0);
+</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="append_row">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(89, 89, 70);
+font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Добавить строку</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="insert_row">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="mouseTracking">
+             <bool>false</bool>
+            </property>
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(89, 89, 70);
+font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Вставить строку</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="remove_row">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(89, 89, 70);
+font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Удалить строки</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="add_to_report">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(89, 89, 70);
+font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Добавить в отчет</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
     <item row="0" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="minimumSize">
@@ -63,44 +277,6 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="3" column="1">
-        <layout class="QGridLayout" name="gridLayout_8">
-         <item row="0" column="0">
-          <widget class="QPushButton" name="Connect_DB">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>82</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>266</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="acceptDrops">
-            <bool>false</bool>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-image: url(:/connect/connect2.png);</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="checkable">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
        <item row="1" column="1">
         <layout class="QGridLayout" name="gridLayout_7">
          <item row="1" column="0">
@@ -239,7 +415,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
              <property name="styleSheet">
               <string notr="true">color: rgb(255, 255, 255);
 background-color: rgb(89, 89, 70);
-font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="text">
               <string>Открыть</string>
@@ -251,7 +427,7 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
              <property name="styleSheet">
               <string notr="true">color: rgb(255, 255, 255);
 background-color: rgb(89, 89, 70);
-font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="text">
               <string>Сохранить</string>
@@ -262,222 +438,46 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
          </item>
         </layout>
        </item>
+       <item row="3" column="1">
+        <layout class="QGridLayout" name="gridLayout_8">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="Connect_DB">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>82</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>266</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="acceptDrops">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/connect/connect2.png);</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>16</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
      </widget>
-    </item>
-    <item row="0" column="3">
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="2" column="1">
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QTabWidget" name="tabWidget">
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;
-color: rgb(0, 0, 0);
-selection-background-color: rgb(158, 158, 158);
-background-color: rgb(255, 255, 255);</string>
-          </property>
-          <property name="currentIndex">
-           <number>2</number>
-          </property>
-          <property name="documentMode">
-           <bool>false</bool>
-          </property>
-          <widget class="QWidget" name="publish_house">
-           <attribute name="title">
-            <string>Издательство</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_2">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item row="0" column="0">
-             <widget class="myQTableView" name="pbh_tableView">
-              <property name="styleSheet">
-               <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_4">
-           <attribute name="title">
-            <string>Вид публикации</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout">
-              <item>
-               <widget class="myQTableView" name="type_of_pb_tableView">
-                <property name="styleSheet">
-                 <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;
-</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab">
-           <attribute name="title">
-            <string>Главная</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_6">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item row="0" column="0">
-             <layout class="QGridLayout" name="gridLayout_5">
-              <item row="0" column="0">
-               <widget class="myQTableView" name="main_tableView">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">font: 9pt &quot;MS Shell Dlg 2&quot;;
-border-left-color: rgb(0, 0, 0);
-gridline-color: rgb(0, 0, 0);
-</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QPushButton" name="append_row">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>28</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(89, 89, 70);
-font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Добавить строку</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="insert_row">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>28</height>
-             </size>
-            </property>
-            <property name="mouseTracking">
-             <bool>false</bool>
-            </property>
-            <property name="acceptDrops">
-             <bool>false</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(89, 89, 70);
-font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Вставить строку</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="remove_row">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>28</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(89, 89, 70);
-font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Удалить строки</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="add_to_report">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>28</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(89, 89, 70);
-font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Добавить в отчет</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>

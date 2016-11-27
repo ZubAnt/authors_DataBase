@@ -114,18 +114,18 @@ void MainWindow::on_save_report_clicked()
     report_docx_file->dynamicCall("Quit()");
 
     //http://www.wiki.crossplatform.ru/index.php/Работа_с_MS_Office_с_помощью_ActiveQt
+
     delete new_ActiveDocument;
-//    delete ActiveDocument;    //??? runtime_erorr
-    delete open_doc;
-    delete document;
     delete Tables;
     delete selection;
     delete font;
     delete Range;
+    delete ActiveDocument;
+    delete open_doc;
+    delete document;
     delete report_docx_file;
 
     progressbar_write_report->close();
-
     ui->statusBar->showMessage("Успешное создание отчета");
 }
 
@@ -150,5 +150,3 @@ void MainWindow::insert_nstr_into_report_docx(const int row, const int col, cons
     delete celR;
     delete cell;
 }
-
-

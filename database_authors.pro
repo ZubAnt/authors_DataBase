@@ -15,7 +15,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    download_publish_house_from_file.cpp \
     ./table/myqsqltablemodel.cpp \
     ./table/myqtableview.cpp \
     ./table/indexcolumndb.cpp \
@@ -32,7 +31,6 @@ SOURCES += main.cpp\
     ./generate_report/progress_write.cpp
 
 HEADERS  += mainwindow.h \
-    download_publish_house_from_file.h \
     errors_authors_db.h \
     ./table/myqsqltablemodel.h \
     ./table/myqtableview.h \
