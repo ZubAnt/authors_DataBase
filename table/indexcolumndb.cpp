@@ -1,6 +1,7 @@
 #include "indexcolumndb.h"
 
 indexColumnDb::indexColumnDb(){
+    index_max_lenght = 12;
     index_main_id    = 0;
     index_name_of_pb = 1;
     index_type_of_pb = 2;

@@ -18,12 +18,10 @@ MyQSqlTableModel::MyQSqlTableModel(QObject* parent,
     this->pb_house = pb_house;
 
     columnDb = new indexColumnDb();
-    added_to_report_rows_set = new QSet<int>();
 }
 MyQSqlTableModel::~MyQSqlTableModel(){
 
     delete columnDb;
-    delete added_to_report_rows_set;
 }
 
 QVariant MyQSqlTableModel::data(const QModelIndex &index, int role) const
@@ -53,8 +51,9 @@ QVariant MyQSqlTableModel::data(const QModelIndex &index, int role) const
     }
 
     if (role == Qt::BackgroundRole) {
-        int row = index.row();
-        QColor color = calculateColorForRow(row);
+
+        int main_id = this->record(index.row()).value(columnDb->index_main_id).toInt();
+        QColor color = calculateColorForRow(main_id);
         return QBrush(color);
     }
 
@@ -89,15 +88,15 @@ int MyQSqlTableModel:: get_count_id_pb_house(const int id) const{
     return count_id;
 }
 
-QColor MyQSqlTableModel::calculateColorForRow(const int row) const
+QColor MyQSqlTableModel::calculateColorForRow(const int main_id) const
 {
-    if(added_to_report_rows_set->isEmpty()){
+    if(added_to_report_rows_set.isEmpty()){
 
         return Qt::white;
     }
 
-    auto it = added_to_report_rows_set->find(row);
-    if(it != added_to_report_rows_set->constEnd()){
+    auto it = added_to_report_rows_set.find(main_id);
+    if(it != added_to_report_rows_set.constEnd()){
 
         return QColor("lightgreen");
     }
@@ -105,20 +104,26 @@ QColor MyQSqlTableModel::calculateColorForRow(const int row) const
     return Qt::white;
 }
 
-void MyQSqlTableModel::add_to_set_of_added_rows(const int row)
+void MyQSqlTableModel::add_to_set_of_added_rows(const int main_id)
 {
-    added_to_report_rows_set->insert(row);
+    added_to_report_rows_set.insert(main_id);
 }
 
-bool MyQSqlTableModel::check_presence(const int row)
+void MyQSqlTableModel::del_form_set_of_added_rows(const int main_id)
 {
-    if(added_to_report_rows_set->isEmpty()){
+    added_to_report_rows_set.remove(main_id);
+}
+
+bool MyQSqlTableModel::check_presence(const int main_id)
+{
+    if(added_to_report_rows_set.isEmpty()){
+
         return false;
     }
 
-    auto it = added_to_report_rows_set->find(row);
-    if(it != added_to_report_rows_set->end()){
-        qDebug() << "it != added_to_report_rows_set->end()";
+    auto it = added_to_report_rows_set.find(main_id);
+    if(it != added_to_report_rows_set.end()){
+
         return true;
     }
 

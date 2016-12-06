@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <typeinfo.h>
 #include <QTableView>
+#include <QFont>
 
 #include "itemdelegate.h"
 #include "../table/indexcolumndb.h"
@@ -91,6 +92,7 @@ QWidget* ComboBoxItemDelegate::createEditor(QWidget* parent, const QStyleOptionV
         QComboBox *cb = new QComboBox(parent);
         cb->addItem("-");
         cb->addItem("c.");
+        cb->addItem("дсп");
         return cb;
     }
     else if(column == columnDb->index_annotation){
@@ -181,6 +183,23 @@ void ComboBoxItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* mod
 
     else
         QStyledItemDelegate::setModelData(editor, model, index);
+}
+
+void ComboBoxItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QStyleOptionViewItem op(option);
+
+    bool check = false;
+    emit signal_check_row_in_added_set(index.row(), check);
+    if(check == false){
+
+        QFont f("MS Shell Dlg 2");
+        f.setPointSize(9);
+        op.font.setStyle(f.style());
+        op.palette.setColor(QPalette::Normal, QPalette::Background, Qt::white);
+    }
+
+    QStyledItemDelegate::paint(painter, op, index);
 }
 
 QString ComboBoxItemDelegate::get_pars_co_author(const QString &cur_text) const{

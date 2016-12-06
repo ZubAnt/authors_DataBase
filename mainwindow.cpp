@@ -14,6 +14,7 @@
 #include <QCloseEvent>
 #include <QPalette>
 #include <QTextStream>
+#include <QtAlgorithms>
 
 #include "errors_authors_db.h"
 #include "./combobox/itemdelegate.h"
@@ -24,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     connect_window(new connection_settings),
-    progressbar_write_report(new progress_write),
+    progressbar_write(new progress_write),
     db(QSqlDatabase::addDatabase("QMYSQL")),
     columnDb(new indexColumnDb()),
     pb_house_table_name("publishing_house"),
@@ -34,12 +35,15 @@ MainWindow::MainWindow(QWidget *parent) :
     choose_str_befor_inserting_err_str("Выберите строку, перед которой необходимо вставить"),
     choose_str_for_adding_to_report_err_str("Выберите строку для добавления в отчет"),
     choose_str_for_remove_from_report_err_str("Выберите строку для удаления из отчета"),
-    rep_ind_max(5),
-    rep_ind_name(0),
-    rep_ind_type_paper(1),
-    rep_ind_publish_hs(2),
-    rep_ind_volome_pl(3),
-    rep_ind_co_authors(4)
+    rep_ind_max(7),
+    rep_ind_main_id(0),
+    rep_ind_name(1),
+    rep_ind_type_paper(2),
+    rep_ind_publish_hs(3),
+    rep_ind_pl(4),
+    rep_ind_authors_pl(5),
+    rep_ind_co_authors(6),
+    delimer_symbol('|')
 {    
     qDebug()<<"Constructor MainWindow";
 
@@ -59,7 +63,7 @@ MainWindow::~MainWindow()
     delete main_table;
     delete cmb_type_of_pb_table;
     delete columnDb;
-    delete progressbar_write_report;
+    delete progressbar_write;
     delete ui;
 }
 
@@ -162,6 +166,7 @@ void MainWindow::clear_tables()
 //функция, которая загружает базу данных из файла
 
 QTableView *MainWindow::get_tableView(int current_tab){
+
     switch(current_tab){
         case 0:
             return ui->pbh_tableView;
@@ -176,6 +181,7 @@ QTableView *MainWindow::get_tableView(int current_tab){
 }
 
 QSqlTableModel *MainWindow::get_table(int current_tab){
+
     switch(current_tab){
         case 0:
             return pb_house_table;
@@ -216,6 +222,19 @@ void MainWindow::slot_set_conections_settings_database(const QString &name,
     open_database(name);
 }
 
+void MainWindow::slot_check_row_in_added_set(const int row, bool &check)
+{
+
+    if(main_table->check_presence(main_table->record(row).value(columnDb->index_main_id).toInt())){
+
+        check = true;
+    }
+    else{
+
+        check = false;
+    }
+}
+
 void MainWindow::slot_get_numb_tab(int &numb_tab){
 
     numb_tab = ui->tabWidget->currentIndex();
@@ -243,12 +262,14 @@ void MainWindow::slot_remove_rows(QTableView *tableView_change, const int numb_t
         return;
     }
 
-    int len  = index_rem_rows.length();
-    for(int i =0; i < len; ++i){
-
-        table_change->removeRow(index_rem_rows[i].row());
+    for(auto it = index_rem_rows.cend() - 1;
+        it >= index_rem_rows.cbegin();
+        --it)
+    {
+        table_change->removeRow(it->row());        
     }
 
+    ui->statusBar->showMessage("OK");
     table_change->select();
     tableView_change->setModel(table_change);
 }
@@ -346,17 +367,12 @@ void MainWindow::on_add_to_report_clicked()
         return;
     }
 
-    int selected_lenght = add_to_rep_rows.length();
-    int percent_cnt = 0;
-
     for(auto it = add_to_rep_rows.cbegin();
         it != add_to_rep_rows.cend();
         ++it)
     {
-        if(main_table->check_presence(it->row())){
+        if(main_table->check_presence(main_table->record(it->row()).value(columnDb->index_main_id).toInt())){
 
-            qDebug() << "check_presence is true";
-            ++percent_cnt;
             continue;
         }
         else{
@@ -364,23 +380,22 @@ void MainWindow::on_add_to_report_clicked()
             int row_count = ui->report_tableWidget->rowCount();
             ui->report_tableWidget->insertRow(row_count);
 
-//            ui->report_tableWidget->itemAt(row_count, rep_ind_name)->setData(Qt::DisplayRole, main_table->record(it->row()).value(columnDb->index_name_of_pb));
-
+            ui->report_tableWidget->setItem(row_count, rep_ind_main_id,
+                                            new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_main_id).toString()));
             ui->report_tableWidget->setItem(row_count, rep_ind_name,
                                             new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_name_of_pb).toString()));
             ui->report_tableWidget->setItem(row_count, rep_ind_type_paper,
                                             new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_type_paper).toString()));
             ui->report_tableWidget->setItem(row_count, rep_ind_publish_hs,
                                             new QTableWidgetItem(find_pb_house_by_id(main_table->record(it->row()).value(columnDb->index_publish_hs).toInt())));
-            ui->report_tableWidget->setItem(row_count, rep_ind_volome_pl,
+            ui->report_tableWidget->setItem(row_count, rep_ind_pl,
                                             new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_pl).toString()));
+            ui->report_tableWidget->setItem(row_count, rep_ind_authors_pl,
+                                            new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_authors_pl).toString()));
             ui->report_tableWidget->setItem(row_count, rep_ind_co_authors,
                                             new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_co_authors).toString()));
 
-            main_table->add_to_set_of_added_rows(it->row());
-
-            ui->statusBar->showMessage(QString::number((percent_cnt / selected_lenght) * 100) + "adding");
-            ++percent_cnt;
+            main_table->add_to_set_of_added_rows(main_table->record(it->row()).value(columnDb->index_main_id).toInt());
         }
 
         ui->statusBar->showMessage("OK");
@@ -401,12 +416,6 @@ const QString MainWindow::find_pb_house_by_id(const int id)
     }
 
     return find_pb_house_str;
-}
-
-void MainWindow::on_open_report_clicked()
-{
-    progressbar_write_report->show();
-    progressbar_write_report->set_progressbar(50);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -435,11 +444,209 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_del_row_in_report_clicked()
 {
-    QModelIndexList del_from_rep_rows = ui->report_tableWidget->selectionModel()->selectedIndexes();
 
-    if(del_from_rep_rows.empty()){
+    if(!db.isOpen()){
+
+        ui->statusBar->showMessage("Please connect to the database");
+        return;
+    }
+
+    QModelIndexList del_from_rep_rows_rep = ui->report_tableWidget->selectionModel()->selectedIndexes();
+    QModelIndexList del_from_rep_rows_tab = ui->main_tableView->selectionModel()->selectedIndexes();
+
+    if(del_from_rep_rows_rep.empty() && del_from_rep_rows_tab.empty()){
 
         ui->statusBar->showMessage(choose_str_for_remove_from_report_err_str);
         return;
+    }
+    else if(!del_from_rep_rows_rep.empty()){
+
+
+        for(auto it = del_from_rep_rows_rep.cend() - 1;
+            it >= del_from_rep_rows_rep.cbegin();
+            --it)
+        {
+            int row = it->row();
+            int main_id = ui->report_tableWidget->item(row, rep_ind_main_id)->text().toInt();
+            main_table->del_form_set_of_added_rows(main_id);
+
+            ui->report_tableWidget->removeRow(row);
+        }
+    }
+    else{
+
+        for(auto it = del_from_rep_rows_tab.cbegin();
+            it != del_from_rep_rows_tab.cend();
+            ++it)
+        {
+            int row = it->row();
+            int main_id = main_table->record(row).value(columnDb->index_main_id).toInt();
+            main_table->del_form_set_of_added_rows(main_id);
+
+            for(int i = 0; i < ui->report_tableWidget->rowCount(); ++i)
+            {
+                if(ui->report_tableWidget->item(i, rep_ind_main_id)->text().toInt() == main_id)
+                {
+                    ui->report_tableWidget->removeRow(i);
+                }
+            }
+        }
+    }
+}
+
+void MainWindow::on_up_row_in_report_clicked()
+{
+
+    if(!db.isOpen()){
+
+        ui->statusBar->showMessage("Please connect to the database");
+        return;
+    }
+
+    QModelIndexList up_in_rep_rows = ui->report_tableWidget->selectionModel()->selectedIndexes();
+
+    if(up_in_rep_rows.empty()){
+
+        ui->statusBar->showMessage("Выберите строки для перемещения вверх");
+        return;
+    }
+
+    if(up_in_rep_rows[0].row() == 0){
+
+        return;
+    }
+
+    QVector<QString> tmp_data;
+
+    for(auto it = up_in_rep_rows.begin();
+        it != up_in_rep_rows.end();
+        ++it)
+    {
+        int row = it->row();
+        ///===================================================================================
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_main_id)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_name)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_type_paper)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_publish_hs)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_pl)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_authors_pl)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_co_authors)->text());
+        ///===================================================================================
+        ui->report_tableWidget->removeRow(row - 1);
+        ui->report_tableWidget->insertRow(row - 1);
+        ///==================================================================================================================
+        ui->report_tableWidget->setItem(row - 1, rep_ind_main_id,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_main_id)->text()));
+        ui->report_tableWidget->setItem(row - 1, rep_ind_name,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_name)->text()));
+        ui->report_tableWidget->setItem(row - 1, rep_ind_type_paper,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_type_paper)->text()));
+        ui->report_tableWidget->setItem(row - 1, rep_ind_publish_hs,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_publish_hs)->text()));
+        ui->report_tableWidget->setItem(row - 1, rep_ind_pl,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_pl)->text()));
+        ui->report_tableWidget->setItem(row - 1, rep_ind_authors_pl,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_authors_pl)->text()));
+        ui->report_tableWidget->setItem(row - 1, rep_ind_co_authors,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_co_authors)->text()));
+        ///==================================================================================================================
+        ui->report_tableWidget->removeRow(row);
+        ui->report_tableWidget->insertRow(row);
+        ///=================================================================================
+        ui->report_tableWidget->setItem(row, rep_ind_main_id,
+                                        new QTableWidgetItem(tmp_data[rep_ind_main_id]));
+        ui->report_tableWidget->setItem(row, rep_ind_name,
+                                        new QTableWidgetItem(tmp_data[rep_ind_name]));
+        ui->report_tableWidget->setItem(row, rep_ind_type_paper,
+                                        new QTableWidgetItem(tmp_data[rep_ind_type_paper]));
+        ui->report_tableWidget->setItem(row, rep_ind_publish_hs,
+                                        new QTableWidgetItem(tmp_data[rep_ind_publish_hs]));
+        ui->report_tableWidget->setItem(row, rep_ind_pl,
+                                        new QTableWidgetItem(tmp_data[rep_ind_pl]));
+        ui->report_tableWidget->setItem(row, rep_ind_authors_pl,
+                                        new QTableWidgetItem(tmp_data[rep_ind_authors_pl]));
+        ui->report_tableWidget->setItem(row, rep_ind_co_authors,
+                                        new QTableWidgetItem(tmp_data[rep_ind_co_authors]));
+        ///=================================================================================
+        tmp_data.clear();
+    }
+}
+
+void MainWindow::on_down_row_in_report_clicked()
+{
+
+    if(!db.isOpen()){
+
+        ui->statusBar->showMessage("Please connect to the database");
+        return;
+    }
+
+    QModelIndexList down_in_rep_rows = ui->report_tableWidget->selectionModel()->selectedIndexes();
+
+    if(down_in_rep_rows.empty()){
+
+        ui->statusBar->showMessage("Выберите строки для перемещения вниз");
+        return;
+    }
+
+    if(down_in_rep_rows[down_in_rep_rows.length() - 1].row() == main_table->rowCount() - 1){
+
+        return;
+    }
+
+    QVector<QString> tmp_data;
+
+    for(auto it = down_in_rep_rows.end() - 1;
+        it >= down_in_rep_rows.begin();
+        --it)
+    {
+
+        int row = it->row();
+        ///===================================================================================
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_main_id)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_name)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_type_paper)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_publish_hs)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_pl)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_authors_pl)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_co_authors)->text());
+        ///===================================================================================
+        ui->report_tableWidget->removeRow(row + 1);
+        ui->report_tableWidget->insertRow(row + 1);
+        ///==================================================================================================================
+        ui->report_tableWidget->setItem(row + 1, rep_ind_main_id,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_main_id)->text()));
+        ui->report_tableWidget->setItem(row + 1, rep_ind_name,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_name)->text()));
+        ui->report_tableWidget->setItem(row + 1, rep_ind_type_paper,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_type_paper)->text()));
+        ui->report_tableWidget->setItem(row + 1, rep_ind_publish_hs,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_publish_hs)->text()));
+        ui->report_tableWidget->setItem(row + 1, rep_ind_pl,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_pl)->text()));
+        ui->report_tableWidget->setItem(row + 1, rep_ind_authors_pl,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_authors_pl)->text()));
+        ui->report_tableWidget->setItem(row + 1, rep_ind_co_authors,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_co_authors)->text()));
+        ///==================================================================================================================
+        ui->report_tableWidget->removeRow(row);
+        ui->report_tableWidget->insertRow(row);
+        ///=================================================================================
+        ui->report_tableWidget->setItem(row, rep_ind_main_id,
+                                        new QTableWidgetItem(tmp_data[rep_ind_main_id]));
+        ui->report_tableWidget->setItem(row, rep_ind_name,
+                                        new QTableWidgetItem(tmp_data[rep_ind_name]));
+        ui->report_tableWidget->setItem(row, rep_ind_type_paper,
+                                        new QTableWidgetItem(tmp_data[rep_ind_type_paper]));
+        ui->report_tableWidget->setItem(row, rep_ind_publish_hs,
+                                        new QTableWidgetItem(tmp_data[rep_ind_publish_hs]));
+        ui->report_tableWidget->setItem(row, rep_ind_pl,
+                                        new QTableWidgetItem(tmp_data[rep_ind_pl]));
+        ui->report_tableWidget->setItem(row, rep_ind_authors_pl,
+                                        new QTableWidgetItem(tmp_data[rep_ind_authors_pl]));
+        ui->report_tableWidget->setItem(row, rep_ind_co_authors,
+                                        new QTableWidgetItem(tmp_data[rep_ind_co_authors]));
+        ///=================================================================================
+        tmp_data.clear();
     }
 }

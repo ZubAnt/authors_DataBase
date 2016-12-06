@@ -17,7 +17,7 @@
 #include "./table/myqsqltablemodel.h"
 #include "./table/indexcolumndb.h"
 #include "./connection_settings/connection_settings.h"
-#include "./generate_report/progress_write.h"
+#include "./progress_readwrite/progress_readwrite.h"
 
 namespace Ui {
 class MainWindow;
@@ -50,6 +50,11 @@ public:
     void warning_connection();
     void error_create_table(QSqlQuery &query);
 
+    bool import_data_into_table(QList<QString> &list,
+                                QSqlTableModel *model,
+                                const QString &fileName_imp,
+                                const int shift_for_err);
+
 public slots:
 
     void slot_remove_rows(QTableView *tableView_change, const int numb_tab, const QModelIndexList &index_rem_rows);
@@ -63,6 +68,8 @@ public slots:
                                                const QString &login,
                                                const QString &password,
                                                const int port);
+
+    void slot_check_row_in_added_set(const int row, bool &check);
 
 private slots:
 
@@ -80,7 +87,13 @@ private slots:
 
     void on_save_report_clicked();
 
-    void on_open_report_clicked();
+    void on_up_row_in_report_clicked();
+
+    void on_down_row_in_report_clicked();
+
+    void on_import_databases_triggered();
+
+    void on_export_databases_triggered();
 
 protected:
     void keyPressEvent(QKeyEvent * event) override;
@@ -91,7 +104,7 @@ signals:
 private:
     Ui::MainWindow *ui;
     connection_settings *connect_window;
-    progress_write *progressbar_write_report;
+    progress_write *progressbar_write;
 
     QSqlDatabase db;
 
@@ -107,11 +120,15 @@ private:
     const QString choose_str_for_remove_from_report_err_str;
 
     int rep_ind_max;            //Максимальное количество столбцов в таблице report
+    int rep_ind_main_id;        //Индекс в таблице report main_id
     int rep_ind_name;           //Индекс в таблице report названия публикации
     int rep_ind_type_paper;     //Индекс в таблице report рук./печ.
     int rep_ind_publish_hs;     //Индекс в таблице report издательства
-    int rep_ind_volome_pl;      //Индекс в таблице report объёма пл
+    int rep_ind_pl;             //Индекс в таблице report пл
+    int rep_ind_authors_pl;     //Индекс в таблице report авторских пл
     int rep_ind_co_authors;     //Индекс в таблице report соавторов
+
+    QChar delimer_symbol;
 
     QSqlTableModel *pb_house_table;
     QSqlTableModel *type_of_pb_table;
@@ -119,16 +136,22 @@ private:
 
     QAxObject *report_docx_file;
     QAxObject *report_new_table;
+    QList<QString> report_headerlist;
 
     ComboBoxItemDelegate* cmb_type_of_pb_table;
 
     void open_database(const QString &name);
+
     void clear_tables();
     void setwidth_column_main_table();
     void freeze_column_main_table();
+
     void init_report_tableWidget();
+    void insert_header_into_report_docx();
     void insert_text_into_report_docx(const int row, const int col, const int rep_index);
     void insert_nstr_into_report_docx(const int row, const int col, const int number_str);
+    void insert_volome_pl_into_report_docx(const int row, const int col,
+                                           const int rep_index_pl, const int rep_index_auth_pl);
     const QString find_pb_house_by_id(const int id);
 };
 

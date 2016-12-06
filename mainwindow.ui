@@ -42,7 +42,7 @@ selection-background-color: rgb(158, 158, 158);
 background-color: rgb(255, 255, 255);</string>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <property name="documentMode">
            <bool>false</bool>
@@ -411,26 +411,26 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
          <item row="5" column="0" colspan="2">
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QPushButton" name="open_report">
-             <property name="styleSheet">
-              <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(89, 89, 70);
-font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
-             </property>
-             <property name="text">
-              <string>Открыть</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="save_report">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>28</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>28</height>
+              </size>
+             </property>
              <property name="styleSheet">
               <string notr="true">color: rgb(255, 255, 255);
 background-color: rgb(89, 89, 70);
-font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="text">
-              <string>Сохранить</string>
+              <string>Создать отчет</string>
              </property>
             </widget>
            </item>
@@ -490,19 +490,26 @@ font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="import_databases"/>
+    <addaction name="export_databases"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
+  <action name="import_databases">
+   <property name="text">
+    <string>Загрузить .adb файл</string>
    </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
+  </action>
+  <action name="export_databases">
+   <property name="text">
+    <string>Сохранить как...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

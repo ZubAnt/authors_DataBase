@@ -5,6 +5,7 @@
 class indexColumnDb
 {
 public:
+    int index_max_lenght;   //количество индексов
     int index_main_id;      //номер столбца main_id
     int index_name_of_pb;   //номер столбца названия пубикации
     int index_type_of_pb;   //номер столбца вида публикации

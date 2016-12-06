@@ -24,8 +24,8 @@ void myQTableView::keyPressEvent(QKeyEvent *event)
     int cur_key = event->key();
 
     if(cur_key == Qt::Key_Delete){
+
         QModelIndexList rows_select = this->selectionModel()->selectedIndexes();
-        qDebug()<< "DELETE ROWS";
         int numb_tab = 0;
         if(!rows_select.isEmpty()){
             emit signal_get_numb_tab(numb_tab);
@@ -33,9 +33,11 @@ void myQTableView::keyPressEvent(QKeyEvent *event)
         }
     }
     else if(cur_key == Qt::Key_F5){
+
         emit signal_fullscreen_enable();
     }
     else if(cur_key == Qt::Key_Escape){
+
         emit signal_fullscreen_disable();
     }
 }

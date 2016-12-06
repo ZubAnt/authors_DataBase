@@ -43,4 +43,5 @@ void MainWindow::init_connect(){
     //close open_DB
     connect(connect_window, SIGNAL(signal_set_conections_settings_database(QString,QString,QString,QString,int)),
             this, SLOT(slot_set_conections_settings_database(QString,QString,QString,QString,int)));
+
 }

@@ -20,11 +20,15 @@ public:
     virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     virtual void setEditorData(QWidget* editor, const QModelIndex& index) const;
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     void insert_data_co_authors(QAbstractItemModel* model, const QModelIndex& index, const QString &cur_text) const;
     int get_count_id_type_of_pb_table(const QString &id_value) const;
     int get_count_id_pb_house_table(const QString &id_value) const;
     QString get_pars_co_author(const QString &cur_text) const;
+
+signals:
+    void signal_check_row_in_added_set(const int row, bool &check) const;
 
 private:
 

@@ -19,6 +19,7 @@ public:
 protected:
     void keyPressEvent(QKeyEvent * event);
     void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint);
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 signals:
     void signal_remove_rows(QTableView *tableView_change, const int numb_tab, const QModelIndexList &index_rem_rows);

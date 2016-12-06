@@ -12,7 +12,7 @@ void MainWindow::init_type_of_pb_tableView(){
     ui->type_of_pb_tableView->setModel(type_of_pb_table);
 
     ui->type_of_pb_tableView->horizontalHeader()->setStretchLastSection(true);
-    ui->type_of_pb_tableView->setColumnHidden(0,true);
+    ui->type_of_pb_tableView->setColumnHidden(0, true);
     ui->type_of_pb_tableView->setSortingEnabled(false);
 }
 
@@ -25,7 +25,7 @@ void MainWindow::init_pb_house_tableView(){
     ui->pbh_tableView->setModel(pb_house_table);
 
     ui->pbh_tableView->horizontalHeader()->setStretchLastSection(true);
-    ui->pbh_tableView->setColumnHidden(0,true);
+    ui->pbh_tableView->setColumnHidden(0, true);
     ui->pbh_tableView->setSortingEnabled(false);
 }
 
@@ -34,6 +34,10 @@ void MainWindow::init_main_tableView(){
     cmb_type_of_pb_table = new ComboBoxItemDelegate(type_of_pb_table,
                                                     pb_house_table,
                                                     ui->main_tableView);
+
+    //Изменение цвета ячейки после удаления из превьюшки
+    connect(cmb_type_of_pb_table, SIGNAL(signal_check_row_in_added_set(const int, bool &)),
+            this, SLOT(slot_check_row_in_added_set(const int, bool &)));
 
     main_table = new MyQSqlTableModel(this, &db, type_of_pb_table, pb_house_table);
     main_table->setTable(main_table_name);
@@ -44,7 +48,7 @@ void MainWindow::init_main_tableView(){
 
     //растянуть до конца последний столбец
     ui->main_tableView->horizontalHeader()->setStretchLastSection(true);
-    ui->main_tableView->setColumnHidden(0,true);    //скрыть id
+    ui->main_tableView->setColumnHidden(0, true);    //скрыть id
 
     setwidth_column_main_table();   //set width column
     freeze_column_main_table();     //freeze column
@@ -52,6 +56,7 @@ void MainWindow::init_main_tableView(){
     ui->main_tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     ui->main_tableView->setItemDelegate(cmb_type_of_pb_table);  //combobox
+
 }
 
 void MainWindow::setwidth_column_main_table(){
@@ -86,12 +91,21 @@ void MainWindow::init_report_tableWidget()
 {
     ui->report_tableWidget->setColumnCount(rep_ind_max);
 
+    ui->report_tableWidget->setColumnHidden(rep_ind_main_id, true);
     ui->report_tableWidget->setColumnHidden(rep_ind_type_paper, true);
     ui->report_tableWidget->setColumnHidden(rep_ind_publish_hs, true);
-    ui->report_tableWidget->setColumnHidden(rep_ind_volome_pl ,  true);
-    ui->report_tableWidget->setColumnHidden(rep_ind_co_authors,  true);
+    ui->report_tableWidget->setColumnHidden(rep_ind_pl, true);
+    ui->report_tableWidget->setColumnHidden(rep_ind_authors_pl, true);
+    ui->report_tableWidget->setColumnHidden(rep_ind_co_authors, true);
 
     ui->report_tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->report_tableWidget->setHorizontalHeaderItem(rep_ind_name, new QTableWidgetItem("Название статьи"));
     ui->report_tableWidget->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+
+    report_headerlist.append("№\nп/п");
+    report_headerlist.append("Наименование работы, ее вид");
+    report_headerlist.append("Печ.\nили\nрук");
+    report_headerlist.append("Выходные данные");
+    report_headerlist.append("Об-м\nв п.л");
+    report_headerlist.append("Соавторы");
 }

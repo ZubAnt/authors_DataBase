@@ -10,6 +10,7 @@ void connection_settings::export_data()
 {
     QFile conn_set(file_name_connections_settings);
     if(!conn_set.open(QIODevice::WriteOnly | QIODevice::Text)){
+
         return;
     }
     else{
@@ -31,6 +32,8 @@ void connection_settings::export_data()
             out_stream << "Comment:\n" << map_comment.value(Name_Db) << endl << endl;
             ui->progressBar->setValue(((i + 1) / row) * 100);
         }
+
+        conn_set.close();
     }
 }
 
@@ -92,5 +95,6 @@ void connection_settings::import_data()
 
             ui->progressBar->setValue(((i + 1) / number_of_DB) * 100);
         }
+        conn_set.close();
     }
 }
