@@ -28,21 +28,23 @@ MainWindow::MainWindow(QWidget *parent) :
     progressbar_write(new progress_write),
     db(QSqlDatabase::addDatabase("QMYSQL")),
     columnDb(new indexColumnDb()),
-    pb_house_table_name("publishing_house"),
-    type_of_pb_table_name("type_of_publication"),
+    pb_house_table_name("Publishing_house"),
+    type_of_pb_table_name("Type_of_publication"),
     main_table_name("main"),
     add_to_report_err_str("Добавьте публикацию в отчет"),
     choose_str_befor_inserting_err_str("Выберите строку, перед которой необходимо вставить"),
     choose_str_for_adding_to_report_err_str("Выберите строку для добавления в отчет"),
     choose_str_for_remove_from_report_err_str("Выберите строку для удаления из отчета"),
-    rep_ind_max(7),
+    rep_ind_max(8),
     rep_ind_main_id(0),
     rep_ind_name(1),
-    rep_ind_type_paper(2),
-    rep_ind_publish_hs(3),
-    rep_ind_pl(4),
-    rep_ind_authors_pl(5),
-    rep_ind_co_authors(6),
+    rep_ind_type_of_pb(2),
+    rep_ind_type_paper(3),
+    rep_ind_publish_hs(4),
+    rep_ind_pl(5),
+    rep_ind_authors_pl(6),
+    rep_ind_co_authors(7),
+    report_columncount(6),
     delimer_symbol('|')
 {    
     qDebug()<<"Constructor MainWindow";
@@ -107,7 +109,8 @@ void MainWindow::open_database(const QString &name)
 
             QSqlQuery Query(db);
 
-            QString create_name_db = "CREATE DATABASE IF NOT EXISTS " + name;
+            QString create_name_db = "CREATE DATABASE IF NOT EXISTS " + name +
+                    " DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;";
             if (Query.exec(create_name_db.toStdString().c_str())){
 
                 qDebug() << "CREATE DATABASE IF NOT EXISTS is successful";
@@ -138,7 +141,6 @@ void MainWindow::open_database(const QString &name)
         }
 
         catch(int err){
-            ui->statusBar->showMessage("interception exception");
             return;
         }
 
@@ -218,6 +220,7 @@ void MainWindow::slot_set_conections_settings_database(const QString &name,
     db.setUserName(login);
     db.setPassword(password);
     db.setPort(port);
+    db.setDatabaseName("");
 
     open_database(name);
 }
@@ -384,6 +387,8 @@ void MainWindow::on_add_to_report_clicked()
                                             new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_main_id).toString()));
             ui->report_tableWidget->setItem(row_count, rep_ind_name,
                                             new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_name_of_pb).toString()));
+            ui->report_tableWidget->setItem(row_count, rep_ind_type_of_pb,
+                                            new QTableWidgetItem(find_type_of_pb_by_id(main_table->record(it->row()).value(columnDb->index_type_of_pb).toInt())));
             ui->report_tableWidget->setItem(row_count, rep_ind_type_paper,
                                             new QTableWidgetItem(main_table->record(it->row()).value(columnDb->index_type_paper).toString()));
             ui->report_tableWidget->setItem(row_count, rep_ind_publish_hs,
@@ -416,6 +421,22 @@ const QString MainWindow::find_pb_house_by_id(const int id)
     }
 
     return find_pb_house_str;
+}
+
+const QString MainWindow::find_type_of_pb_by_id(const int id)
+{
+    QString find_type_of_pb_str;
+    int row_count =  type_of_pb_table->rowCount();
+
+    for(int i = 0; i < row_count; ++i){
+
+        if(type_of_pb_table->record(i).value(0).toInt() == id){
+
+            return type_of_pb_table->record(i).value(1).toString();
+        }
+    }
+
+    return find_type_of_pb_str;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -526,6 +547,7 @@ void MainWindow::on_up_row_in_report_clicked()
         ///===================================================================================
         tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_main_id)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_name)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_type_of_pb)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_type_paper)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_publish_hs)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row - 1, rep_ind_pl)->text());
@@ -539,6 +561,8 @@ void MainWindow::on_up_row_in_report_clicked()
                                         new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_main_id)->text()));
         ui->report_tableWidget->setItem(row - 1, rep_ind_name,
                                         new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_name)->text()));
+        ui->report_tableWidget->setItem(row - 1, rep_ind_type_of_pb,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_type_of_pb)->text()));
         ui->report_tableWidget->setItem(row - 1, rep_ind_type_paper,
                                         new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_type_paper)->text()));
         ui->report_tableWidget->setItem(row - 1, rep_ind_publish_hs,
@@ -557,6 +581,8 @@ void MainWindow::on_up_row_in_report_clicked()
                                         new QTableWidgetItem(tmp_data[rep_ind_main_id]));
         ui->report_tableWidget->setItem(row, rep_ind_name,
                                         new QTableWidgetItem(tmp_data[rep_ind_name]));
+        ui->report_tableWidget->setItem(row, rep_ind_type_of_pb,
+                                        new QTableWidgetItem(tmp_data[rep_ind_type_of_pb]));
         ui->report_tableWidget->setItem(row, rep_ind_type_paper,
                                         new QTableWidgetItem(tmp_data[rep_ind_type_paper]));
         ui->report_tableWidget->setItem(row, rep_ind_publish_hs,
@@ -605,6 +631,7 @@ void MainWindow::on_down_row_in_report_clicked()
         ///===================================================================================
         tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_main_id)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_name)->text());
+        tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_type_of_pb)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_type_paper)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_publish_hs)->text());
         tmp_data.push_back(ui->report_tableWidget->item(row + 1, rep_ind_pl)->text());
@@ -618,6 +645,8 @@ void MainWindow::on_down_row_in_report_clicked()
                                         new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_main_id)->text()));
         ui->report_tableWidget->setItem(row + 1, rep_ind_name,
                                         new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_name)->text()));
+        ui->report_tableWidget->setItem(row + 1, rep_ind_type_of_pb,
+                                        new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_type_of_pb)->text()));
         ui->report_tableWidget->setItem(row + 1, rep_ind_type_paper,
                                         new QTableWidgetItem(ui->report_tableWidget->item(row, rep_ind_type_paper)->text()));
         ui->report_tableWidget->setItem(row + 1, rep_ind_publish_hs,
@@ -636,6 +665,8 @@ void MainWindow::on_down_row_in_report_clicked()
                                         new QTableWidgetItem(tmp_data[rep_ind_main_id]));
         ui->report_tableWidget->setItem(row, rep_ind_name,
                                         new QTableWidgetItem(tmp_data[rep_ind_name]));
+        ui->report_tableWidget->setItem(row, rep_ind_type_of_pb,
+                                        new QTableWidgetItem(tmp_data[rep_ind_type_of_pb]));
         ui->report_tableWidget->setItem(row, rep_ind_type_paper,
                                         new QTableWidgetItem(tmp_data[rep_ind_type_paper]));
         ui->report_tableWidget->setItem(row, rep_ind_publish_hs,

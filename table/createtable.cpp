@@ -10,7 +10,7 @@ void MainWindow::creeate_pb_house_table(){
     query.prepare( "CREATE TABLE IF NOT EXISTS Publishing_house("
                    "pb_house_id INT AUTO_INCREMENT PRIMARY KEY,"
                    "Name varchar(255) NOT NULL,"
-                   "UNIQUE KEY (Name))" );
+                   "UNIQUE KEY (Name)) DEFAULT CHARACTER SET = 'utf8'" );
 
     if(query.exec()){
 
@@ -29,7 +29,7 @@ void MainWindow::creeate_type_of_pb_table(){
     query.prepare( "CREATE TABLE IF NOT EXISTS Type_of_publication("
                    "type_of_pb_id INT AUTO_INCREMENT PRIMARY KEY,"
                    "Name varchar(255) NOT NULL,"
-                   "UNIQUE KEY (Name))" );
+                   "UNIQUE KEY (Name)) DEFAULT CHARACTER SET = 'utf8'");
     if(query.exec()){
 
         qDebug() << "Table Type_of_publication was created";
@@ -63,11 +63,11 @@ void MainWindow::create_main_table(){
                   "INDEX `FK_main_publishing_house` (`Издательство`),"
                   ""
                   "CONSTRAINT `FK_main_type_of_publication` FOREIGN KEY (`Вид публикации`)"
-                  " REFERENCES `type_of_publication` (`type_of_pb_id`),"
+                  " REFERENCES `Type_of_publication` (`type_of_pb_id`),"
                   ""
                   "CONSTRAINT `FK_main_publishing_house` FOREIGN KEY (`Издательство`)"
-                  " REFERENCES `publishing_house` (`pb_house_id`)"
-                  ")");
+                  " REFERENCES `Publishing_house` (`pb_house_id`)"
+                  ") DEFAULT CHARACTER SET = 'utf8'");
     if(query.exec()){
 
         qDebug() << "Table main was created";

@@ -297,6 +297,19 @@ color: rgb(170, 0, 0);</string>
    <header>myqtablewidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lineEdit_host</tabstop>
+  <tabstop>lineEdit_login</tabstop>
+  <tabstop>lineEdit_password</tabstop>
+  <tabstop>spinBox_port</tabstop>
+  <tabstop>textEdit_comment</tabstop>
+  <tabstop>textEdit_errors</tabstop>
+  <tabstop>open</tabstop>
+  <tabstop>delete_DB</tabstop>
+  <tabstop>save_DB</tabstop>
+  <tabstop>create_DB</tabstop>
+  <tabstop>tableWidget_nameDB</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

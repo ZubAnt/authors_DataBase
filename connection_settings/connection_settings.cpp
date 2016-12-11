@@ -298,6 +298,16 @@ void connection_settings::on_open_clicked()
 
          int row = index_list[0].row();
          QString name = DB_name.value(row);
+         for(auto it = DB_name.begin();
+             it != DB_name.end();
+             ++it)
+         {
+             qDebug() << "key = " + QString::number(it.key()) + "; value = " + it.value();
+         }
+         qDebug()<< "open row = " + QString::number(row) + "; name = " + name
+                 << "; host = " + map_host.value(name)
+                 << "; host = " + map_login.value(name)
+                 << "; host = " + map_password.value(name);
          try_open_name_DB = name;
          emit signal_set_conections_settings_database(name,
                                                       map_host.value(name),

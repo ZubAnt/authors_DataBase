@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QString>
 #include <QtSql>
+#include <QDebug>
 
 //#include "../database_authors_new_version/table/myqtableview.h"
 
@@ -23,4 +24,5 @@ void MainWindow::error_create_table(QSqlQuery &query){
     QString error = "MySQL error:" + query.lastError().text() + \
                     "MySQL error code:" + QString::number(query.lastError().number());
     ui->statusBar->showMessage(error);
+    qDebug() << error;
 }

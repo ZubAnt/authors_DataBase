@@ -95,7 +95,7 @@ void MainWindow::on_save_report_clicked()
                                               "const QVariant&, const QVariant&,"
                                               "const QVariant&, const QVariant&)",
                                               ActiveDocument->dynamicCall("Range()"),
-                                              row_count + 1, rep_ind_max - 1,
+                                              row_count + 1, report_columncount,
                                               2, 2);
 
     progressbar_write->set_progressbar_percent(60);
@@ -106,11 +106,15 @@ void MainWindow::on_save_report_clicked()
 
         insert_nstr_into_report_docx(i, 0, i);
 
-        insert_text_into_report_docx(i, rep_ind_name, rep_ind_name);
-        insert_text_into_report_docx(i, rep_ind_type_paper, rep_ind_type_paper);
-        insert_text_into_report_docx(i, rep_ind_publish_hs, rep_ind_publish_hs);
-        insert_volome_pl_into_report_docx(i, rep_ind_pl, rep_ind_pl, rep_ind_authors_pl);
-        insert_text_into_report_docx(i, rep_ind_co_authors - 1, rep_ind_co_authors);
+        insert_data_into_report_docx(i, 1, rep_ind_name);
+        insert_delimer_into_report_docx(i, 1, ". ");
+        insert_data_into_report_docx(i, 1, rep_ind_type_of_pb);
+        insert_delimer_into_report_docx(i, 1, ".");
+
+        insert_data_into_report_docx(i, 2, rep_ind_type_paper);
+        insert_data_into_report_docx(i, 3, rep_ind_publish_hs);
+        insert_volome_pl_into_report_docx(i, 4, rep_ind_pl, rep_ind_authors_pl);
+        insert_data_into_report_docx(i, 5, rep_ind_co_authors);
 
         progressbar_write->set_progressbar_percent(60 + ((((i + 1) * 100 / row_count) * 40)/ 100));
     }
@@ -119,7 +123,7 @@ void MainWindow::on_save_report_clicked()
 
     QAxObject *new_ActiveDocument = report_docx_file->querySubObject("ActiveDocument");
     new_ActiveDocument->dynamicCall("Close()");
-        report_docx_file->dynamicCall("Quit()");
+    report_docx_file->dynamicCall("Quit()");
 
     //http://www.wiki.crossplatform.ru/index.php/Работа_с_MS_Office_с_помощью_ActiveQt
 
@@ -141,7 +145,7 @@ void MainWindow::on_save_report_clicked()
 
 void MainWindow::insert_header_into_report_docx()
 {
-    for(int col = 0; col < rep_ind_max - 1; ++col){
+    for(int col = 0; col < report_columncount; ++col){
         QAxObject* cell = report_new_table->querySubObject("Cell(Row, Column)", 1, col + 1) ;
         QAxObject* celR = cell->querySubObject("Range()");
         celR->dynamicCall("InsertAfter(Text)", report_headerlist[col]);
@@ -152,7 +156,7 @@ void MainWindow::insert_header_into_report_docx()
 }
 
 ///row and col >=1 for document
-void MainWindow::insert_text_into_report_docx(const int row, const int col, const int rep_index)
+void MainWindow::insert_data_into_report_docx(const int row, const int col, const int rep_index)
 {
     QAxObject* cell = report_new_table->querySubObject("Cell(Row, Column)", row + 2, col + 1) ;
     QAxObject* celR = cell->querySubObject("Range()");
@@ -183,6 +187,16 @@ void MainWindow::insert_volome_pl_into_report_docx(const int row, const int col,
             "-----\n" + \
             ui->report_tableWidget->model()->data(ui->report_tableWidget->model()->index(row, rep_index_auth_pl)).toString();
     celR->dynamicCall("InsertAfter(Text)", volome_pl);
+
+    delete celR;
+    delete cell;
+}
+
+void MainWindow::insert_delimer_into_report_docx(const int row, const int col, const QString &delim)
+{
+    QAxObject* cell = report_new_table->querySubObject("Cell(Row, Column)", row + 2, col + 1) ;
+    QAxObject* celR = cell->querySubObject("Range()");
+    celR->dynamicCall("InsertAfter(Text)", delim);
 
     delete celR;
     delete cell;

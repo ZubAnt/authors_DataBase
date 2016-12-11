@@ -4,6 +4,7 @@
 #include <QDebug>
 
 void MainWindow::init_type_of_pb_tableView(){
+    qDebug()<<"инициализация type_of_pb";
 
     type_of_pb_table = new QSqlTableModel(this);
     type_of_pb_table->setTable(type_of_pb_table_name);
@@ -17,6 +18,7 @@ void MainWindow::init_type_of_pb_tableView(){
 }
 
 void MainWindow::init_pb_house_tableView(){
+    qDebug()<<"инициализация pb_house";
 
     pb_house_table = new QSqlTableModel(this);
     pb_house_table->setTable(pb_house_table_name);
@@ -31,6 +33,7 @@ void MainWindow::init_pb_house_tableView(){
 
 void MainWindow::init_main_tableView(){
 
+    qDebug()<<"инициализация main";
     cmb_type_of_pb_table = new ComboBoxItemDelegate(type_of_pb_table,
                                                     pb_house_table,
                                                     ui->main_tableView);
@@ -92,6 +95,7 @@ void MainWindow::init_report_tableWidget()
     ui->report_tableWidget->setColumnCount(rep_ind_max);
 
     ui->report_tableWidget->setColumnHidden(rep_ind_main_id, true);
+    ui->report_tableWidget->setColumnHidden(rep_ind_type_of_pb, true);
     ui->report_tableWidget->setColumnHidden(rep_ind_type_paper, true);
     ui->report_tableWidget->setColumnHidden(rep_ind_publish_hs, true);
     ui->report_tableWidget->setColumnHidden(rep_ind_pl, true);

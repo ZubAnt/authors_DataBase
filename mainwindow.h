@@ -122,11 +122,14 @@ private:
     int rep_ind_max;            //Максимальное количество столбцов в таблице report
     int rep_ind_main_id;        //Индекс в таблице report main_id
     int rep_ind_name;           //Индекс в таблице report названия публикации
+    int rep_ind_type_of_pb;     //Индекс в таблице report вида публикации
     int rep_ind_type_paper;     //Индекс в таблице report рук./печ.
     int rep_ind_publish_hs;     //Индекс в таблице report издательства
     int rep_ind_pl;             //Индекс в таблице report пл
     int rep_ind_authors_pl;     //Индекс в таблице report авторских пл
     int rep_ind_co_authors;     //Индекс в таблице report соавторов
+
+    int report_columncount; //Количество стобцов записываемых в отчет
 
     QChar delimer_symbol;
 
@@ -148,11 +151,13 @@ private:
 
     void init_report_tableWidget();
     void insert_header_into_report_docx();
-    void insert_text_into_report_docx(const int row, const int col, const int rep_index);
+    void insert_data_into_report_docx(const int row, const int col, const int rep_index);
     void insert_nstr_into_report_docx(const int row, const int col, const int number_str);
     void insert_volome_pl_into_report_docx(const int row, const int col,
                                            const int rep_index_pl, const int rep_index_auth_pl);
+    void insert_delimer_into_report_docx(const int row, const int col, const QString &delim);
     const QString find_pb_house_by_id(const int id);
+    const QString find_type_of_pb_by_id(const int id);
 };
 
 #endif // MAINWINDOW_H

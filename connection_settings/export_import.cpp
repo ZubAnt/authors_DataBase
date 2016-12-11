@@ -62,6 +62,7 @@ void connection_settings::import_data()
             inp_stream.readLine();                  // забирает строку
             input_string = inp_stream.readLine();   // Название БД
             DB_name.insert(i, input_string);
+            qDebug()<< " DB_name = " + input_string + "; row = " + QString::number(i);
 
             //Отображение названия базы данных
             ui->tableWidget_nameDB->insertRow(i);
